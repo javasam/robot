@@ -1,13 +1,13 @@
 #include <Servo.h>
 #define servoPin 10  //The pin of servo
-int a, a1, a2;
-#define ML_Ctrl 4  //Define the direction control pin of the left motor
-#define ML_PWM 6   //Define the PWM control pin of the left motor
-#define MR_Ctrl 2  //Define the direction control pin of the right motor
-#define MR_PWM 5   //Define the PWM control pin of the right motor
-#define Trig 12
-#define Echo 13
+#define leftMotorCtrl 4  //Define the direction control pin of the left motor
+#define leftMotorPwr 6   //Define the PWM control pin of the left motor
+#define rightMotorCtrl 2  //Define the direction control pin of the right motor
+#define rightMotorPwr 5   //Define the PWM control pin of the right motor
+#define Trig 12           //display
+#define Echo 13           //ultrasonic sensor
 float distance;
+int a, a1, a2;
 Servo myservo;
 
 void setup() {
@@ -15,11 +15,11 @@ void setup() {
   myservo.attach(10);
   pinMode(Trig, OUTPUT);
   pinMode(Echo, INPUT);
-  pinMode(ML_Ctrl, OUTPUT);
-  pinMode(ML_PWM, OUTPUT);
-  pinMode(MR_Ctrl, OUTPUT);
-  pinMode(MR_PWM, OUTPUT);
-  procedure(90); //Set the angle of the servo to 90°
+  pinMode(leftMotorCtrl, OUTPUT);
+  pinMode(leftMotorPwr, OUTPUT);
+  pinMode(rightMotorCtrl, OUTPUT);
+  pinMode(rightMotorPwr, OUTPUT);
+  myservo.write(90);
   delay(500); //delay in 500ms
 }
 
@@ -57,44 +57,44 @@ void loop() {
 }
 
 void Car_front() {
-  digitalWrite(MR_Ctrl, HIGH);
-  analogWrite(MR_PWM, 650);
-  digitalWrite(ML_Ctrl, HIGH);
-  analogWrite(ML_PWM, 660);
+  digitalWrite(rightMotorCtrl, HIGH);
+  analogWrite(rightMotorPwr, 650);
+  digitalWrite(leftMotorCtrl, HIGH);
+  analogWrite(leftMotorPwr, 660);
 }
 
 void Car_back() {
-  digitalWrite(MR_Ctrl, LOW);
-  analogWrite(MR_PWM, 100);
-  digitalWrite(ML_Ctrl, LOW);
-  analogWrite(ML_PWM, 100);
+  digitalWrite(rightMotorCtrl, LOW);
+  analogWrite(rightMotorPwr, 100);
+  digitalWrite(leftMotorCtrl, LOW);
+  analogWrite(leftMotorPwr, 100);
 }
 
 void Car_left() {
   delay(100);
   Car_back();
   delay(500);
-  digitalWrite(MR_Ctrl, HIGH);
-  analogWrite(MR_PWM, 110);
-  digitalWrite(ML_Ctrl, LOW);
-  analogWrite(ML_PWM, 360);
+  digitalWrite(rightMotorCtrl, HIGH);
+  analogWrite(rightMotorPwr, 110);
+  digitalWrite(leftMotorCtrl, LOW);
+  analogWrite(leftMotorPwr, 360);
 }
 
 void Car_right() {
   delay(100);
   Car_back();
   delay(500);
-  digitalWrite(MR_Ctrl, LOW);
-  analogWrite(MR_PWM, 360);
-  digitalWrite(ML_Ctrl, HIGH);
-  analogWrite(ML_PWM, 110);
+  digitalWrite(rightMotorCtrl, LOW);
+  analogWrite(rightMotorPwr, 360);
+  digitalWrite(leftMotorCtrl, HIGH);
+  analogWrite(leftMotorPwr, 110);
 }
 
 void Car_Stop() {
-  digitalWrite(MR_Ctrl, LOW);
-  analogWrite(MR_PWM, 0);
-  digitalWrite(ML_Ctrl, LOW);
-  analogWrite(ML_PWM, 0);
+  digitalWrite(rightMotorCtrl, LOW);
+  analogWrite(rightMotorPwr, 0);
+  digitalWrite(leftMotorCtrl, LOW);
+  analogWrite(leftMotorPwr, 0);
 }
 
 //The function controls ultrasonic sound
