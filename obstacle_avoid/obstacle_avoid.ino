@@ -26,11 +26,11 @@ void setup() {
 void loop() {
   a = checkdistance("initial");  //Assign the distance to the front detected by ultrasonic sensor to the variable a
 
-  if (a < 20) {//When the distance to the front is less than 20cm
+  if (a < 10) {//When the distance to the front is less than 20cm
     Car_Stop();  //The robot stops
     delay(500); //delay in 500ms
     myservo.write(180);  //Ultrasonic pan-tilt turns left
-    delay(1500); //delay in 500ms
+    delay(1000); //delay in 500ms
     a1 = checkdistance("a1");  //Assign the distance to the left detected by ultrasonic sensor to the variable a1
     delay(100); //read value
     myservo.write(0);
@@ -40,14 +40,14 @@ void loop() {
     
     myservo.write(90);
     delay(500);
-    if (a1 > a2 & a1 + a2 > 40) { //When the distance to the left is bigger than to the right
+    if (a1 > a2) { //When the distance to the left is bigger than to the right
       Car_left();  //The robot turns left
       delay(700);  //turn left700ms
-    } else if (a1 < a2 & a1 + a2 > 40) {
+    } else if (a1 < a2 ) {
       Car_right(); //It turns left for 700ms
       delay(700);
     } else {
-      Car_back();
+      //Car_back();
       delay(1700);
     }
   } 
@@ -71,23 +71,23 @@ void Car_back() {
 }
 
 void Car_left() {
-  delay(100);
-  Car_back();
-  delay(500);
+  //delay(100);
+  //Car_back();
+  //delay(500);
   digitalWrite(rightMotorCtrl, HIGH);
-  analogWrite(rightMotorPwr, 110);
+  analogWrite(rightMotorPwr, 100);
   digitalWrite(leftMotorCtrl, LOW);
-  analogWrite(leftMotorPwr, 360);
+  analogWrite(leftMotorPwr, 365);
 }
 
 void Car_right() {
-  delay(100);
-  Car_back();
-  delay(500);
+  //delay(100);
+  //Car_back();
+  //delay(500);
   digitalWrite(rightMotorCtrl, LOW);
-  analogWrite(rightMotorPwr, 360);
+  analogWrite(rightMotorPwr, 365);
   digitalWrite(leftMotorCtrl, HIGH);
-  analogWrite(leftMotorPwr, 110);
+  analogWrite(leftMotorPwr,100);
 }
 
 void Car_Stop() {
