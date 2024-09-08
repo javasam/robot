@@ -6,25 +6,35 @@
 #define rightMotorPwr 5   //Define the PWM control pin of the right motor
 #define Trig 12           //display
 #define Echo 13           //ultrasonic sensor
+#define leftLineTrk  11  //left line traking sensor
+#define midLineTrk  7  //middle line traking sensor
+#define rightLineTrk  8  //right line traking sensor
 float distance;
 int a, a1, a2;
+int leftLineTrkVal, midLineTrkVal, rightLineTrkVal;
 Servo myservo;
 
 void setup() {
   Serial.begin(9600);
   myservo.attach(10);
+  myservo.write(90);
   pinMode(Trig, OUTPUT);
   pinMode(Echo, INPUT);
   pinMode(leftMotorCtrl, OUTPUT);
   pinMode(leftMotorPwr, OUTPUT);
   pinMode(rightMotorCtrl, OUTPUT);
   pinMode(rightMotorPwr, OUTPUT);
-  myservo.write(90);
+  pinMode(leftLineTrk, INPUT); //Set all pins of the line tracking sensor as input mode
+  pinMode(midLineTrk, INPUT);
+  pinMode(rightLineTrk, INPUT);
   delay(500); //delay in 500ms
 }
 
 void loop() {
   a = checkdistance("initial");  //Assign the distance to the front detected by ultrasonic sensor to the variable a
+
+  lineTrakingData();
+  delay(500);
 
   if (a < 10) {//When the distance to the front is less than 20cm
     Car_Stop();  //The robot stops
@@ -111,5 +121,20 @@ float checkdistance(String from) {
   Serial.println();
   delay(10);
   return distance;
+}
+
+//Read the value of the line tracker sensors
+void lineTrakingData() {
+  leftLineTrkVal = digitalRead(leftLineTrk);
+  Serial.print("left line trk: ");
+  Serial.println(leftLineTrkVal);
+
+  midLineTrkVal = digitalRead(midLineTrk);
+  Serial.print("mid line trk: ");
+  Serial.println(midLineTrkVal);
+
+  rightLineTrkVal = digitalRead(rightLineTrk);
+  Serial.print("right line trk: ");
+  Serial.println(rightLineTrkVal);
 }
 //****************************************************************
