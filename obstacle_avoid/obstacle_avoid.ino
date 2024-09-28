@@ -4,8 +4,8 @@
 #define leftMotorPwr 6   //Define the PWM control pin of the left motor
 #define rightMotorCtrl 2  //Define the direction control pin of the right motor
 #define rightMotorPwr 5   //Define the PWM control pin of the right motor
-#define Trig 12           //display
-#define Echo 13           //ultrasonic sensor
+#define trig 12           //ultrasonic trigger
+#define echo 13           //ultrasonic sensor
 #define leftLineTrk  11  //left line traking sensor
 #define midLineTrk  7  //middle line traking sensor
 #define rightLineTrk  8  //right line traking sensor
@@ -18,8 +18,8 @@ void setup() {
   Serial.begin(9600);
   myservo.attach(10);
   myservo.write(90);
-  pinMode(Trig, OUTPUT);
-  pinMode(Echo, INPUT);
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
   pinMode(leftMotorCtrl, OUTPUT);
   pinMode(leftMotorPwr, OUTPUT);
   pinMode(rightMotorCtrl, OUTPUT);
@@ -37,7 +37,7 @@ void loop() {
   delay(500);
 
   if (a < 10) {//When the distance to the front is less than 20cm
-    Car_Stop();  //The robot stops
+    carStop();  //The robot stops
     delay(500); //delay in 500ms
     myservo.write(180);  //Ultrasonic pan-tilt turns left
     delay(1000); //delay in 500ms
@@ -51,38 +51,38 @@ void loop() {
     myservo.write(90);
     delay(500);
     if (a1 > a2) { //When the distance to the left is bigger than to the right
-      Car_left();  //The robot turns left
+      carLeft();  //The robot turns left
       delay(700);  //turn left700ms
     } else if (a1 < a2 ) {
-      Car_right(); //It turns left for 700ms
+      carRight(); //It turns left for 700ms
       delay(700);
     } else {
-      //Car_back();
+      //carBack();
       delay(1700);
     }
   } 
   else { //When the distance to the front is >=20c，the robot moves forward
-    Car_front(); //go front
+    carFront(); //go front
   }
 }
 
-void Car_front() {
+void carFront() {
   digitalWrite(rightMotorCtrl, HIGH);
   analogWrite(rightMotorPwr, 650);
   digitalWrite(leftMotorCtrl, HIGH);
   analogWrite(leftMotorPwr, 660);
 }
 
-void Car_back() {
+void carBack() {
   digitalWrite(rightMotorCtrl, LOW);
   analogWrite(rightMotorPwr, 100);
   digitalWrite(leftMotorCtrl, LOW);
   analogWrite(leftMotorPwr, 100);
 }
 
-void Car_left() {
+void carLeft() {
   //delay(100);
-  //Car_back();
+  //carBack();
   //delay(500);
   digitalWrite(rightMotorCtrl, HIGH);
   analogWrite(rightMotorPwr, 100);
@@ -90,9 +90,9 @@ void Car_left() {
   analogWrite(leftMotorPwr, 365);
 }
 
-void Car_right() {
+void carRight() {
   //delay(100);
-  //Car_back();
+  //carBack();
   //delay(500);
   digitalWrite(rightMotorCtrl, LOW);
   analogWrite(rightMotorPwr, 365);
@@ -100,7 +100,7 @@ void Car_right() {
   analogWrite(leftMotorPwr,100);
 }
 
-void Car_Stop() {
+void carStop() {
   digitalWrite(rightMotorCtrl, LOW);
   analogWrite(rightMotorPwr, 0);
   digitalWrite(leftMotorCtrl, LOW);
