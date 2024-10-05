@@ -1,6 +1,7 @@
 #include "Wire.h"       
 #include "I2Cdev.h"     
-#include "MPU6050.h"    
+#include "MPU6050.h"
+//i2c address 0x68
 
 MPU6050 mpu;
 int16_t ax, ay, az;
