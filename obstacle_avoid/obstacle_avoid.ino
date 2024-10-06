@@ -23,12 +23,7 @@ int16_t ax, ay, az;
 int16_t gx, gy, gz;
 
 struct MyData {
-  byte ax;
-  byte ay;
-  byte az;
-  byte gx;
-  byte gy;
-  byte gz;
+  byte ax, ay, az, gx, gy, gz;
 };
 
 MyData data;
@@ -233,4 +228,3 @@ void lineTrakingData() {
   Serial.print("right line trk: ");
   Serial.println(rightLineTrkVal);
 }
-
