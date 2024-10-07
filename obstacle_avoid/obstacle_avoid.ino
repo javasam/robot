@@ -19,7 +19,7 @@ Servo myservo;
 int stuckCount;
 bool debug;
 
-MPU6050 mpu; //i2c gyro address 0x68
+MPU6050 mpu(0x68); //i2c gyro address 0x68
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 float axMax, ayMax, azMax, gxMax, gyMax, gzMax;
@@ -89,10 +89,10 @@ void loop() {
       delay(500);
       if (a1 > a2) { //When the distance to the left is bigger than to the right
         carLeft();  //The robot turns left
-        delay(200);  //turn left700ms
+        delay(100);  //turn left700ms
       } else if (a1 < a2) {
         carRight(); //It turns left for 700ms
-        delay(200);
+        delay(100);
       } else { //When the distance to the front is >=20c，the robot moves forward
         carFront(); //go front
       }
