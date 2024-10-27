@@ -3,7 +3,7 @@
 
 // Character's bit pictures
 unsigned char d0[16] = {0x7c, 0xa2, 0x92, 0x8a, 0x7c};
-unsigned char d1[16] = {0x00, 0x84, 0xfe, 0x80};
+unsigned char d1[16] = {0x84, 0xfe, 0x80};
 unsigned char d2[16] = {0x84, 0xc2, 0xa2, 0x92, 0x8c};
 unsigned char d3[16] = {0x44, 0x82, 0x92, 0x92, 0x6c};
 unsigned char d4[16] = {0x30, 0x28, 0xa4, 0xfe, 0xa0};
@@ -30,19 +30,19 @@ unsigned char O[16] = {0x7c, 0x82, 0x82, 0x7c};
 unsigned char P[16] = {0xfe, 0x12, 0x12, 0x0c};
 unsigned char Q[16] = {0x7c, 0xa2, 0x42, 0xbc};
 unsigned char R[16] = {0xfe, 0x12, 0x32, 0xcc};
-unsigned char S[16] = {0x00, 0x4c, 0x92, 0x92, 0x64};
+unsigned char S[16] = {0x4c, 0x92, 0x92, 0x64};
 unsigned char T[16] = {0x02, 0x02, 0xfe, 0x02, 0x02};
 unsigned char U[16] = {0x7e, 0x80, 0x80, 0x7e};
 unsigned char V[16] = {0x3e, 0x40, 0x80, 0x40, 0x3e};
-unsigned char W[16] = {0x00, 0xfe, 0x40, 0x30, 0x40, 0xfe};
+unsigned char W[16] = {0xfe, 0x40, 0x30, 0x40, 0xfe};
 unsigned char X[16] = {0xc6, 0x28, 0x10, 0x28, 0xc6};
 unsigned char Y[16] = {0x06, 0x08, 0xf0, 0x08, 0x06};
 unsigned char Z[16] = {0xc2, 0xa2, 0x92, 0x8e};
 unsigned char space[16] = {};
 unsigned char minus[16] = {0x10, 0x10, 0x10};
 unsigned char plus[16] = {0x10, 0x38, 0x10};
-unsigned char degree[16] = {0x00, 0x0e, 0x0a, 0x0e};
-unsigned char fish[16] = {0x10, 0x28, 0x44, 0x56, 0xc6, 0xc6, 0x44, 0x28, 0x10, 0x28, 0x44, 0x28, 0x10};
+unsigned char degree[16] = {0x0e, 0x0a, 0x0e};
+unsigned char fish[16] = {0x00, 0x10, 0x28, 0x44, 0x54, 0x46, 0xc6, 0xc6, 0x44, 0x44, 0x28, 0x10, 0x28, 0x44, 0x7c};
 
 void setup() {
   pinMode(SCL_Pin, OUTPUT);
@@ -53,7 +53,7 @@ void setup() {
 }
 
 void loop() {
-  scrollText("SDQ");  // Scrolling text
+  scrollText("LEO AND STEPHANIE");  // Scrolling text
 }
 
 // Character's table
@@ -121,28 +121,68 @@ void scrollText(String text) {
   int textLength = text.length();
   int scrollPos = 0;
   int spaceBetween = 2; // Задайте желаемое расстояние между символами
-  
-  // Прокручиваем до тех пор, пока последний символ не выйдет за левую границу
-  while (scrollPos < textLength * (8 + spaceBetween) + 16) {  
-    matrix_clear();  // Очищаем дисплей перед каждым обновлением
+  delay(2000);
+  Serial.print("text lenght: ");
+  Serial.println(textLength);
+  if (textLength > 3) {
+    // Прокручиваем до тех пор, пока последний символ не выйдет за левую границу
+    while (scrollPos < textLength * (8 + spaceBetween) + 16) {  
+      matrix_clear();  // Очищаем дисплей перед каждым обновлением
 
-    for (int i = 0; i < textLength; i++) {
-      char c = text[i];
-      unsigned char* pattern = getCharPattern(c);
-      
-      // Рассчитываем смещение символа
-      int charPos = 16 - (scrollPos - i * 5);
-      
-      // Выводим символ, если он находится в пределах видимой части матрицы
-      if (charPos >= -8 && charPos < 16) {
-        for (int col = 0; col < 16; col++) {
-          matrix_display_column(pattern[col], charPos + col);
+      for (int i = 0; i < textLength; i++) {
+        char c = text[i];
+        unsigned char* pattern = getCharPattern(c);
+
+        // Рассчитываем смещение символа
+        int charPos = 16 - (scrollPos - i * 5);
+
+        // Выводим символ, если он находится в пределах видимой части матрицы
+        if (charPos >= -8 && charPos < 16) {
+          for (int col = 0; col < 16; col++) {
+            matrix_display_column(pattern[col], charPos + col);
+          }
         }
       }
+      scrollPos++;  // Сдвиг текста влево
+      delay(200);   // Задержка для эффекта прокрутки
+      
+    } 
+  } else {
+      displayStaticText(text);
     }
-    
-    scrollPos++;  // Сдвиг текста влево
-    delay(200);   // Задержка для эффекта прокрутки
+}
+
+int getSymbolWidth(unsigned char* pattern) {
+  int width = 0;
+  for (int i = 0; i < 8; i++) {
+    if (pattern[i] != 0x00) {
+      width++;
+    }
+  }
+  return width;
+}
+
+void displayStaticText(String text) {
+  matrix_clear();  // Очищаем матрицу перед отображением текста
+
+  int startPos = 0;
+
+  // Выводим каждый символ на дисплей
+  for (int i = 0; i < text.length(); i++) {
+    char c = text[i];
+    unsigned char* pattern = getCharPattern(c);
+
+    if (pattern != NULL) {
+      int symbolWidth = getSymbolWidth(pattern);
+      if (i > 0 && symbolWidth > 3) {
+        startPos = startPos - 1;
+      }
+      // Отображаем символ на дисплее
+      for (int col = 0; col < 16; col++) {
+        matrix_display_column(pattern[col], startPos + col);
+      }
+      startPos += symbolWidth + 1;
+    }
   }
 }
 
@@ -196,12 +236,3 @@ void matrix_end() {
   digitalWrite(SDA_Pin,HIGH);
   delayMicroseconds(3);
 }
-
-
-
-
-
-
-
-
-
