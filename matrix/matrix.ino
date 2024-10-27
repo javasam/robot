@@ -53,7 +53,7 @@ void setup() {
 }
 
 void loop() {
-  scrollText("LEO AND STEPHANIE");  // Scrolling text
+  scrollText("LONG TEXT");  // Scrolling text
 }
 
 // Character's table
